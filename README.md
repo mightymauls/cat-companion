@@ -43,7 +43,7 @@ With reduced motion on, it holds a still pose for each stage. It hides when the 
 
 ## Pet it
 
-Hover over the cat while Claude is idle: it closes its eyes and floats up hearts. It ignores petting while Claude is working or the alarm is showing.
+Hover over the cat while Claude is idle: it closes its eyes and floats up hearts. At 50–69% context, it yawns first. It ignores petting while Claude is working or the alarm is showing.
 
 ![Petting the cat, with its two buttons](cat-buttons.png)
 

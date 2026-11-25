@@ -163,7 +163,7 @@ test('hovering an idle cat pets it; busy or alarmed cats ignore it', async ($, o
     const ui = await $.ui.mount({ ...SITE, props: { ...SITE.props, isWorking } })
     const isHeart = async () =>
       (await ui.findAll({ type: 'Box', in: 'cat' })).some(b => JSON.stringify(b).includes(HEART))
-    for (const percent of [0, 55, 75, 95]) {
+    for (const percent of [0, 75, 95]) {
       await $.session.measure({ changed: ['context'], rateLimits: [], context: { window: 200000, percent } } as never)
       expect(await isHeart()).toBe(false)
       await ui.pointer({ type: 'enter', x: 3, y: 1 })
@@ -362,4 +362,30 @@ test('the hover buttons change color and start the game', async ($, on) => {
   await down(4, 0)
   expect(await isCat()).toBe(false)
   await ui.unmount()
+})
+
+test('hovering a tired cat makes it yawn, then float hearts', async ($, on) => {
+  on('session.measure', (_, e) => ({ changed: e.changed }) as never)
+  const HEART = '#ff4d7d', MOUTH = '#7a2e3a'
+  for (const isWorking of [false, true]) {
+    const ui = await $.ui.mount({ ...SITE, props: { ...SITE.props, isWorking } })
+    const has = async (hex: string) =>
+      (await ui.findAll({ type: 'Box', in: 'cat' })).some(b => JSON.stringify(b).includes(hex))
+    await $.session.measure({ changed: ['context'], rateLimits: [], context: { window: 200000, percent: 55 } } as never)
+    for (let round = 0; round < 2; round++) {
+      await ui.advance(350 * 5)
+      expect(await has(MOUTH)).toBe(false)
+      await ui.pointer({ type: 'enter', x: 3, y: 2 })
+      expect(await has(MOUTH)).toBe(!isWorking)
+      expect(await has(HEART)).toBe(false)
+      await ui.advance(350 * 3)
+      expect(await has(MOUTH)).toBe(!isWorking)
+      await ui.advance(350)
+      expect(await has(MOUTH)).toBe(false)
+      expect(await has(HEART)).toBe(!isWorking)
+      await ui.pointer({ type: 'leave', x: 3, y: 2 })
+      expect(await has(HEART)).toBe(false)
+    }
+    await ui.unmount()
+  }
 })

@@ -5,7 +5,7 @@ import type { ClientPointerEvent, ClientSurface } from 'claude-code'
 import { DEFAULT_COLOR, nextColor, PALETTES } from './colors'
 import type { Mood } from './mood'
 import { pixelBoxes } from './pixels'
-import { drawFrame, EFFECTS, FACE, FISH, YAWN_START } from './sprites'
+import { drawFrame, EFFECTS, FACE, FISH, YAWN_START, YAWN_TICKS } from './sprites'
 
 // The cat's size in character cells, and the row of buttons above it.
 const COLUMNS = 9
@@ -21,7 +21,7 @@ const BUTTON_FILL = '#6f9c8c'
 const TICK_MS = 350
 const DOUBLE_CLICK_MS = 500
 
-type State = { tick: number; isHovered: boolean; isToolbarOpen: boolean }
+type State = { tick: number; isHovered: boolean; hoveredAt: number; isToolbarOpen: boolean }
 type Props = { isWorking: boolean; color: string; mood: Mood }
 
 // A drag that began on the cat keeps reporting once it is outside.
@@ -31,8 +31,10 @@ function isOverCat(e: ClientPointerEvent) {
   return e.x >= 0 && e.x < COLUMNS && e.y >= 0 && e.y < ROWS
 }
 
+const START: State = { tick: 0, isHovered: false, hoveredAt: 0, isToolbarOpen: false }
+
 function start(surface: ClientSurface<State>) {
-  let current: State = { tick: 0, isHovered: false, isToolbarOpen: false }
+  let current: State = START
   const set = (change: Partial<State>) => {
     current = { ...current, ...change }
     surface.setState(current)
@@ -61,7 +63,7 @@ function start(surface: ClientSurface<State>) {
     closing?.()
     closing = undefined
     if (isHovered) {
-      set({ isHovered, isToolbarOpen: true })
+      set({ isHovered, hoveredAt: current.tick, isToolbarOpen: true })
       return
     }
     set({ isHovered })
@@ -77,18 +79,22 @@ export default function Cat({ color, isWorking, mood }: Props, surface: ClientSu
   if (surface.state === undefined) start(surface)
 
   const { Box } = surface.elements
-  const { tick, isHovered, isToolbarOpen } = surface.state ?? { tick: 0, isHovered: false, isToolbarOpen: false }
+  const { tick, isHovered, hoveredAt, isToolbarOpen } = surface.state ?? START
   const isStill = surface.isMotionReduced
   // Under reduced motion each mood holds one pose that still tells it apart.
   const stillTick = mood === 'yawning' ? YAWN_START : 0
   const colors: Record<string, string> = { ...EFFECTS, ...(PALETTES[color] ?? PALETTES[DEFAULT_COLOR]) }
 
+  // Only an idle cat can be petted, and never over the alarm.
+  const isPetted = isHovered && !isWorking && mood !== 'alarmed'
+
   const grid = drawFrame({
     tick: isStill ? stillTick : tick,
     mood,
     isWorking: isWorking && !isStill,
-    // Only an idle cat can be petted, and never over the alarm.
-    isPetted: isHovered && !isWorking && mood !== 'alarmed',
+    isPetted,
+    // A tired cat yawns when the petting starts.
+    isHoverYawn: isPetted && mood === 'yawning' && (isStill || tick - hoveredAt < YAWN_TICKS),
   })
 
   return (

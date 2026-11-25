@@ -77,11 +77,13 @@ export const EFFECTS: Record<string, string> = {
 // The tick a yawn starts on, within its cycle.
 export const YAWN_START = 82
 const YAWN_CYCLE = 86
+// How long a yawn lasts, in ticks.
+export const YAWN_TICKS = YAWN_CYCLE - YAWN_START
 const BLINK_CYCLE = 14
 
 type Grid = string[][]
 
-export type Pose = { tick: number; mood: Mood; isWorking: boolean; isPetted: boolean }
+export type Pose = { tick: number; mood: Mood; isWorking: boolean; isPetted: boolean; isHoverYawn?: boolean }
 
 function stamp(grid: Grid, art: readonly string[], left: number, top: number) {
   art.forEach((line, dy) => {
@@ -106,10 +108,11 @@ function tailPace(mood: Mood, isActive: boolean) {
   return mood === 'yawning' ? 6 : 3
 }
 
-function drawStanding(grid: Grid, { tick, mood, isWorking, isPetted }: Pose) {
+function drawStanding(grid: Grid, { tick, mood, isWorking, isPetted, isHoverYawn = false }: Pose) {
   const isAlarmed = mood === 'alarmed'
   const isWalking = isWorking || isAlarmed
-  const isYawning = mood === 'yawning' && !isPetted && tick % YAWN_CYCLE >= YAWN_START
+  const isYawnDue = !isPetted && tick % YAWN_CYCLE >= YAWN_START
+  const isYawning = mood === 'yawning' && (isHoverYawn || isYawnDue)
   const isEyeShut = isPetted || isYawning || tick % BLINK_CYCLE === BLINK_CYCLE - 1
   // An alarmed cat hops on every other tick.
   const top = isAlarmed && tick % 2 === 1 ? 0 : 2
@@ -121,7 +124,7 @@ function drawStanding(grid: Grid, { tick, mood, isWorking, isPetted }: Pose) {
   for (const [x, y] of TAILS[swish]!) grid[y! + top]![x!] = 'd'
 
   if (isYawning) stamp(grid, MOUTH, 3, top + 5)
-  if (isPetted) stamp(grid, HEART, 10, 3 - (tick % 4))
+  if (isPetted && !isYawning) stamp(grid, HEART, 10, 3 - (tick % 4))
   if (isAlarmed) stamp(grid, BANG, 11, 0)
 }
 
