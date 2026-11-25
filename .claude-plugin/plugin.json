@@ -1,6 +1,6 @@
 {
   "name": "cat-companion",
-  "version": "0.9.0",
+  "version": "0.9.2",
   "description": "A pixel cat on the message box that acts out how full the context window is",
   "author": {
     "name": "mightymauls.com",

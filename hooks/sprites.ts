@@ -75,8 +75,8 @@ export const EFFECTS: Record<string, string> = {
 }
 
 // The tick a yawn starts on, within its cycle.
-export const YAWN_START = 11
-const YAWN_CYCLE = 16
+export const YAWN_START = 82
+const YAWN_CYCLE = 86
 const BLINK_CYCLE = 14
 
 type Grid = string[][]

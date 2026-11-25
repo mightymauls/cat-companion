@@ -31,7 +31,7 @@ The first time the cat appears, it says thank you in a speech bubble for about 1
 | Context used | The cat |
 | --- | --- |
 | Under 50% | Blinks and swishes its tail |
-| 50–69% | Yawns every few seconds |
+| 50–69% | Yawns now and then |
 | 70–89% | Curls up and naps |
 | 90% and up | Hops up and down under a red "!" |
 

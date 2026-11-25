@@ -80,8 +80,11 @@ test('the cat acts out how full the context is, and recovers', async ($, on) => 
   expect((await has(Z)) || (await has(RED))).toBe(false)
   await at(55)
   let didYawn = false
-  for (let i = 0; i < 16; i++) { await ui.advance(350); didYawn ||= await has(MOUTH) }
+  let yawns = 0
+  for (let i = 0; i < 172; i++) { await ui.advance(350); if (await has(MOUTH)) { didYawn = true; yawns += 1 } }
   expect(didYawn).toBe(true)
+  // Two yawns of four ticks in two 30-second cycles.
+  expect(yawns).toBe(8)
   await at(75)
   expect(await has(Z)).toBe(true)
   await at(92)
