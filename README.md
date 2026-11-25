@@ -4,6 +4,8 @@ A pixel cat that stands on the message box in the Claude desktop app's Code tab 
 
 ![The cat's four stages](cat-stages.png)
 
+[Read the PDF guide](cat-companion.pdf)
+
 ## Install
 
 Made and tested on Claude Code 2.1.331 in the desktop app for Mac. If the cat doesn't appear, update Claude.
