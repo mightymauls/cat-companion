@@ -101,7 +101,7 @@ The commands don't make Claude respond, and their replies are marked as for you 
 
 ## License
 
-Copyright (c) 2026 mightymauls.com. All rights reserved. Cat-Companion is free to install, keep and modify for your own use. Images and videos of the cat, and links to this repository, may be shared, but images and videos may not be sold or used on products for sale without prior written permission. The code may not be published, shared, distributed or sold, in original or modified form, without prior written permission. See [LICENSE](LICENSE) for the full terms.
+Copyright (c) 2026 mightymauls.com. All rights reserved. Cat-Companion is free to install, keep and modify for your own use. Images and videos of the cat, the PDF guide, and links to this repository may be shared, but images, videos and the guide may not be sold or used on products for sale without prior written permission. The mightymauls.com logo may not be used on its own without that permission. The code may not be published, shared, distributed or sold, in original or modified form, without prior written permission. See [LICENSE](LICENSE) for the full terms.
 
 Cat-Companion is an independent mod, not made or endorsed by Anthropic. Claude and Claude Code are Anthropic's.
 
