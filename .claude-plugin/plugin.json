@@ -1,0 +1,11 @@
+{
+  "name": "cat-companion",
+  "version": "0.9.0",
+  "description": "A pixel cat on the message box that acts out how full the context window is",
+  "author": {
+    "name": "mightymauls.com",
+    "url": "https://mightymauls.com"
+  },
+  "homepage": "https://github.com/mightymauls/cat-companion",
+  "types": "./types/index.d.ts"
+}
